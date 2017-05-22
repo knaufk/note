@@ -1,0 +1,50 @@
+#!/usr/bin/env sh
+
+NOTE_DIR=~/Documents/notes
+
+while [[ $# -gt 1 ]]
+do
+key="$1"
+
+case $key in
+    -a|--add)
+    TITLE="$2"
+    shift # past argument
+    ;;
+    -f|--search)
+    PATTERN="$2"
+    shift # past argument
+    ;;
+    -s|--shift)
+    DATE_SHIFT="$2"
+    shift # past argument
+    ;;
+    --default)
+    DEFAULT=YES
+    ;;
+    *)
+            # unknown option
+    ;;
+esac
+shift # past argument or value
+done
+
+if [ -n "$TITLE"  ]
+then
+	if [ -n "$DATE_SHIFT" ]
+	then 
+		DATE=$(date +%Y-%m-%d:%H:%M -d "$DATE_SHIFT")
+	else
+		DATE=$(date +%Y-%m-%d:%H:%M)
+	fi
+	NEW_NOTE=$NOTE_DIR/$DATE.md
+	echo "###  $DATE $TITLE" > $NEW_NOTE
+	vim  $NEW_NOTE -c 'startinsert'
+elif [ -n  "$PATTERN" ]
+then
+	grep -lR "$PATTERN" $NOTE_DIR | xargs cat
+else 
+	head -1 $NOTE_DIR/*.md
+fi
+
+
