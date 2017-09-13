@@ -6,11 +6,12 @@ def main(argv):
 
    f = open(argv[0])
 
-   tasklines = [line for line in f.readlines() if re.match('^\*TASK\*', line)]
+   tasklines = [line for line in f.readlines() if re.match('^.*\*TASK\*', line)]
 
    for taskline in tasklines: 
-       m = re.match('(^\*TASK\*)\s*(.*)$', taskline)
+       m = re.match('(^.*\*TASK\*)\s*(.*)$', taskline)
        task = m.group(2)
+       print ('*TASK* ' + task)
        process = subprocess.run('task add ' + task, shell=True)
    
 
